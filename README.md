@@ -1,27 +1,34 @@
-UBS CIDADE SATELITE
-Este repositório contém um projeto para uma aplicação web destinada a facilitar a busca por informações sobre medicamentos em uma Unidade Básica de Saúde na Cidade Satélite. A aplicação permite aos usuários carregar um arquivo Excel contendo os dados dos medicamentos disponíveis na unidade e realizar buscas por nome do medicamento ou PPS (Princípio Ativo, Posologia e Substância) associados a esses medicamentos.
+Descrição do Projeto:
 
-Funcionalidades Principais
-Carregar arquivo Excel: Os usuários podem selecionar um arquivo Excel contendo os dados dos medicamentos disponíveis.
-Busca por nome de medicamento ou PPS: Os usuários podem digitar o nome do medicamento ou PPS em um campo de busca e obter os resultados correspondentes na tabela.
-Exibição de dados filtrados: Os resultados da busca são exibidos em uma tabela, mostrando as informações relevantes dos medicamentos encontrados.
-Interface amigável: O layout da aplicação é intuitivo e fácil de usar, proporcionando uma experiência agradável para os usuários.
-Tecnologias Utilizadas
-HTML5
-CSS3 (Bootstrap)
-JavaScript (SheetJS)
-Instruções de Uso
-Clone ou faça o download do repositório.
-Abra o arquivo index.html em seu navegador web.
-Selecione um arquivo Excel contendo os dados dos medicamentos disponíveis na Unidade Básica de Saúde.
-Utilize o campo de busca para buscar por nome de medicamento ou PPS.
-Visualize os resultados na tabela abaixo do campo de busca.
-Desenvolvedor
-Este projeto foi desenvolvido por ANTONIEL SOUSA. Para quaisquer dúvidas ou sugestões, entre em contato através do seguinte e-mail: antonielsousa.tech@gmail.com
+# UBS CIDADE SATELITE
+
+Este é um projeto desenvolvido para a gestão e consulta de medicamentos na Unidade Básica de Saúde (UBS) da Cidade Satélite. A aplicação permite carregar dados de um arquivo Excel contendo informações sobre os medicamentos disponíveis na UBS e realizar buscas por nome do medicamento ou pelo PPS (Princípio(s) Ativo(s), Posologia e ou Sugestão(ões)).
+
+## Funcionalidades Principais:
+
+- **Carregamento de Arquivo Excel**: Os dados sobre os medicamentos são carregados a partir de um arquivo Excel, facilitando a atualização e gestão das informações.
+- **Busca de Medicamentos**: É possível realizar buscas por nome do medicamento ou por PPS para encontrar rapidamente as informações desejadas.
+- **Visualização em Tabela**: Os dados são exibidos de forma organizada em uma tabela na página, facilitando a visualização e compreensão.
+- **Design Responsivo**: O design da aplicação é responsivo, adaptando-se a diferentes tamanhos de tela para uma melhor experiência do usuário.
+
+## Tecnologias Utilizadas:
+
+- **HTML5**: Linguagem de marcação utilizada para estruturar a página web.
+- **CSS3**: Utilizado para estilizar a página e torná-la mais atraente e responsiva.
+- **Bootstrap 4**: Framework front-end utilizado para agilizar o desenvolvimento e garantir um layout responsivo e estilizado.
+- **JavaScript (com a biblioteca SheetJS)**: Utilizado para interação com o arquivo Excel, realização de buscas e manipulação dos dados na página web.
+
+## Como Utilizar:
+
+1. Faça o download ou clone este repositório para sua máquina.
+2. Abra o arquivo `index.html` em seu navegador web.
+3. Selecione o arquivo Excel contendo os dados dos medicamentos.
+4. Utilize o campo de busca para procurar por medicamentos pelo nome ou PPS.
+5. Os resultados serão exibidos na tabela abaixo conforme a busca realizada.
+
+## Desenvolvimento e Autor:
+
+Este projeto foi desenvolvido por Antoniel Sousa e está protegido por direitos autorais. Para qualquer dúvida ou sugestão, entre em contato pelo e-mail: antonielsousa.tech@gmail.com
 
 © 2024 Todos os direitos reservados.
-
-
-
-
 
