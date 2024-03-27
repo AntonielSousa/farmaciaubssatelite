@@ -3,17 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UBS CIDADE SATELITE</title>
+  <title>UBS SATELITE</title>
   <!-- Adicionando Bootstrap CSS -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <!-- Adicionando CSS personalizado -->
   <style>
     body {
-      background-image: url('caminho/para/sua/imagem.jpg'); /* Substitua 'caminho/para/sua/imagem.jpg' pelo caminho da sua imagem de fundo */
-      background-size: cover; /* Ajusta a imagem para cobrir toda a área */
-      background-position: center; /* Centraliza a imagem */
-      background-repeat: no-repeat; /* Evita a repetição da imagem */
-      margin-bottom: 60px; /* Adiciona espaço para o rodapé */
+      background-color: #ffffff; /* Cor de fundo suave */
+      margin: 0;
+      padding-bottom: 60px; /* Adiciona espaço para o rodapé */
+      font-family: Arial, sans-serif; /* Fonte padrão */
     }
     .header {
       background-color: #ffffff;
@@ -25,6 +24,20 @@
     .search-container {
       margin-top: 50px;
       margin-bottom: 40px;
+    }
+    .input-group-append button.btn-primary {
+      transition: all 0.3s ease;
+      border-radius: 20px;
+      background-color: #007bff; /* Cor do botão de busca */
+      border-color: #007bff;
+    }
+    .input-group-append button.btn-primary:hover {
+      background-color: #0056b3; /* Cor do botão de busca no hover */
+      border-color: #0056b3;
+    }
+    .form-control {
+      border-radius: 20px; /* Bordas arredondadas para a caixa de entrada */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
     }
     .footer {
       position: fixed;
@@ -55,7 +68,7 @@
   <div class="header text-center">
     <img src="https://www.natal.rn.gov.br/storage/app/media/logo_prefeitura_grande.jpg" alt="Logomarca" class="logo">
   </div>
-
+  <h1 class="text-center">UBS SATÉLITE</h1>
   <div class="search-container">
     <!-- Input para carregar o arquivo Excel -->
     <input type="file" id="inputExcel" class="form-control mb-4">
@@ -76,7 +89,7 @@
 <!-- Rodapé -->
 <footer class="footer">
   <div class="container">
-    <span>Desenvolvido por ANTONIEL SOUSA | &copy; 2024 Todos os direitos reservados</span>
+    <span>Desenvolvido por ANTONIEL SOUSA - UBS SATELITE | &copy; 2024 Todos os direitos reservados</span>
   </div>
 </footer>
 
@@ -139,12 +152,6 @@
 
     // Exibindo a tabela filtrada na página
     document.getElementById('excelTable').innerHTML = htmlTable;
-  }
-
-  // Função para voltar ao topo
-  function topFunction() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
   }
 
   // Ao rolar a página, mostrar ou ocultar o botão flutuante
