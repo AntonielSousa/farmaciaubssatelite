@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>UBS SATELITE</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
   <style>
     body {
-      background-color: #121212;
-      color: #ffffff;
       margin: 0;
       padding-bottom: 60px;
       font-family: Arial, sans-serif;
+      background: linear-gradient(-45deg, #1e1e1e, #2a005f, #1f0033, #000000);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #ffffff;
     }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     .header {
-      background-color: #121212;
       padding: 50px 0;
     }
+
     .logo {
       width: 150px;
     }
+
     .version {
       position: absolute;
       top: 10px;
@@ -30,26 +40,21 @@
       border-radius: 5px;
       font-size: 14px;
     }
+
     .search-container {
       margin-top: 50px;
       margin-bottom: 40px;
     }
-    .input-group-append button.btn-primary {
-      transition: all 0.3s ease;
-      border-radius: 20px;
-      background-color: #007bff;
-      border-color: #007bff;
-    }
-    .input-group-append button.btn-primary:hover {
-      background-color: #0056b3;
-      border-color: #0056b3;
-    }
+
     .form-control {
-      border-radius: 20px;
+      border-radius: 12px;
+      height: 56px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       background-color: #212121;
       color: #ffffff;
+      font-size: 16px;
     }
+
     .footer {
       position: fixed;
       bottom: 0;
@@ -59,57 +64,110 @@
       padding: 10px 0;
       text-align: center;
     }
+
     #excelTable table tbody tr:nth-child(odd) {
       background-color: #1e1e1e;
     }
+
     #excelTable table tbody tr:nth-child(even) {
       background-color: #212121;
     }
-    #excelTable table thead th {
-      font-weight: normal;
-      color: #ffffff;
-    }
+
+    #excelTable table thead th,
     #excelTable table tbody td {
       color: #ffffff;
     }
-    .download-link {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: #007bff;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 5px;
-      text-decoration: none;
-      transition: background-color 0.3s;
+
+    .botaoAnimado {
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(130deg, blue, rgb(136, 0, 255), rgb(195, 10, 176));
+      background-size: 600%;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0px 0px 40px rgba(206, 150, 255, 0.179), 4px 4px 6px rgba(255, 255, 255, 0.293) inset, -4px -4px 6px rgba(255, 255, 255, 0.293) inset;
+      color: rgba(255, 255, 255, 0.831);
+      font-size: 16px;
+      letter-spacing: 1px;
+      animation: gradientAnimation 6s infinite;
+      animation-play-state: paused;
+      overflow: hidden;
+      cursor: pointer;
+      font-family: Montserrat, sans-serif;
+      font-weight: 500;
+      height: 56px;
     }
-    .download-link:hover {
-      background-color: #0056b3;
+
+    .botaoAnimado p {
+      transition: all .5s;
+      margin: 0;
+    }
+
+    .botaoAnimado svg {
+      transition: all .5s;
+      width: 20px;
+      height: 20px;
+      opacity: .8;
+    }
+
+    .botaoAnimado:hover svg {
+      animation: flutuacao 2s infinite alternate;
+      margin-left: 40px;
+      margin-right: -40px;
+      animation-direction: alternate;
+    }
+
+    .botaoAnimado:hover {
+      animation-play-state: running;
+    }
+
+    .botaoAnimado:hover p {
+      transform: translateX(100px);
+    }
+
+    @keyframes gradientAnimation {
+      0% { background-position: 0%, 50%; }
+      50% { background-position: 100%, 50%; }
+      100% { background-position: 0%, 50%; }
+    }
+
+    @keyframes flutuacao {
+      0% {
+        transform: translateY(-4px) rotate(32deg);
+      }
+      100% {
+        transform: translateY(8px) rotate(32deg);
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="version">Versão 2.0</div>
-
-<a href="https://www2.natal.rn.gov.br/transparencia/assets/midia/arquivos/medicamentos/UBS_SATELITE_OUT.xls" 
-   class="download-link" 
-   target="_blank">Estoque Transparência</a>
+<div class="version">Versão 2.1</div>
 
 <div class="container mt-5">
   <div class="header text-center">
     <img src="https://www.natal.rn.gov.br/sme/matriculaonline/img/logo_natal_ws.png" alt="Logomarca" class="logo">
   </div>
   <h1 class="text-center">UBS SATÉLITE</h1>
+
   <div class="search-container">
     <input type="file" id="inputExcel" class="form-control mb-4">
     <div class="input-group mb-3">
       <input type="text" id="searchInput" class="form-control" placeholder="Digite PPS OU MEDICAMENTO">
       <div class="input-group-append">
-        <button class="btn btn-primary" type="button" id="searchButton">Buscar</button>
+        <button class="botaoAnimado" type="button" id="searchButton">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
+            <path d="M21.71 20.29l-3.388-3.387A8.933 8.933 0 0 0 19 11a9 9 0 1 0-9 9 8.933 8.933 0 0 0 5.902-1.678l3.387 3.388a1 1 0 0 0 1.414-1.414zM4 11a7 7 0 1 1 7 7 7.008 7.008 0 0 1-7-7z"/>
+          </svg>
+          <p>BUSCAR</p>
+        </button>
       </div>
     </div>
   </div>
+
   <div id="excelTable" class="table-responsive"></div>
 </div>
 
@@ -145,6 +203,11 @@
     filterRows(searchText);
   });
 
+  document.getElementById('searchInput').addEventListener('input', function() {
+    var searchText = this.value.trim().toUpperCase();
+    filterRows(searchText);
+  });
+
   function filterRows(searchText) {
     var filteredRows = rowData.filter(function(row) {
       return row.some(function(cell) {
@@ -168,19 +231,6 @@
 
     document.getElementById('excelTable').innerHTML = htmlTable;
   }
-
-  window.onscroll = function() {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-      document.getElementById('floatBtn').style.display = 'block';
-    } else {
-      document.getElementById('floatBtn').style.display = 'none';
-    }
-  };
-
-  document.getElementById('searchInput').addEventListener('input', function() {
-    var searchText = this.value.trim().toUpperCase();
-    filterRows(searchText);
-  });
 </script>
 
 </body>
