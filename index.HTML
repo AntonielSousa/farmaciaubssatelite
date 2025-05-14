@@ -15,21 +15,13 @@
       animation: gradientBG 15s ease infinite;
       color: #ffffff;
     }
-
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
-    .header {
-      padding: 50px 0;
-    }
-
-    .logo {
-      width: 150px;
-    }
-
+    .header { padding: 50px 0; }
+    .logo { width: 150px; }
     .version {
       position: absolute;
       top: 10px;
@@ -40,12 +32,10 @@
       border-radius: 5px;
       font-size: 14px;
     }
-
     .search-container {
       margin-top: 50px;
       margin-bottom: 40px;
     }
-
     .form-control {
       border-radius: 12px;
       height: 56px;
@@ -54,7 +44,6 @@
       color: #ffffff;
       font-size: 16px;
     }
-
     .footer {
       position: fixed;
       bottom: 0;
@@ -64,20 +53,9 @@
       padding: 10px 0;
       text-align: center;
     }
-
-    #excelTable table tbody tr:nth-child(odd) {
-      background-color: #1e1e1e;
-    }
-
-    #excelTable table tbody tr:nth-child(even) {
-      background-color: #212121;
-    }
-
-    #excelTable table thead th,
-    #excelTable table tbody td {
-      color: #ffffff;
-    }
-
+    #excelTable table tbody tr:nth-child(odd) { background-color: #1e1e1e; }
+    #excelTable table tbody tr:nth-child(even) { background-color: #212121; }
+    #excelTable table thead th, #excelTable table tbody td { color: #ffffff; }
     .botaoAnimado {
       padding: 14px 24px;
       display: flex;
@@ -87,7 +65,9 @@
       background-size: 600%;
       border: none;
       border-radius: 12px;
-      box-shadow: 0px 0px 40px rgba(206, 150, 255, 0.179), 4px 4px 6px rgba(255, 255, 255, 0.293) inset, -4px -4px 6px rgba(255, 255, 255, 0.293) inset;
+      box-shadow: 0px 0px 40px rgba(206, 150, 255, 0.179),
+                  4px 4px 6px rgba(255, 255, 255, 0.293) inset,
+                  -4px -4px 6px rgba(255, 255, 255, 0.293) inset;
       color: rgba(255, 255, 255, 0.831);
       font-size: 16px;
       letter-spacing: 1px;
@@ -99,47 +79,35 @@
       font-weight: 500;
       height: 56px;
     }
-
     .botaoAnimado p {
       transition: all .5s;
       margin: 0;
     }
-
     .botaoAnimado svg {
       transition: all .5s;
       width: 20px;
       height: 20px;
       opacity: .8;
     }
-
     .botaoAnimado:hover svg {
       animation: flutuacao 2s infinite alternate;
       margin-left: 40px;
       margin-right: -40px;
-      animation-direction: alternate;
     }
-
     .botaoAnimado:hover {
       animation-play-state: running;
     }
-
     .botaoAnimado:hover p {
       transform: translateX(100px);
     }
-
     @keyframes gradientAnimation {
       0% { background-position: 0%, 50%; }
       50% { background-position: 100%, 50%; }
       100% { background-position: 0%, 50%; }
     }
-
     @keyframes flutuacao {
-      0% {
-        transform: translateY(-4px) rotate(32deg);
-      }
-      100% {
-        transform: translateY(8px) rotate(32deg);
-      }
+      0% { transform: translateY(-4px) rotate(32deg); }
+      100% { transform: translateY(8px) rotate(32deg); }
     }
   </style>
 </head>
@@ -178,23 +146,19 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.2/xlsx.full.min.js"></script>
-
 <script>
   let rowData = [];
 
   document.getElementById('inputExcel').addEventListener('change', function(e) {
     var file = e.target.files[0];
     var reader = new FileReader();
-
     reader.onload = function(e) {
       var data = new Uint8Array(e.target.result);
       var workbook = XLSX.read(data, { type: 'array' });
-
       var sheetName = workbook.SheetNames[0];
       var worksheet = workbook.Sheets[sheetName];
       rowData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
     };
-
     reader.readAsArrayBuffer(file);
   });
 
@@ -228,7 +192,6 @@
       htmlTable += '</tr>';
     });
     htmlTable += '</tbody></table>';
-
     document.getElementById('excelTable').innerHTML = htmlTable;
   }
 </script>
