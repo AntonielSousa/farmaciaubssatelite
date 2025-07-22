@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UBS SATELITE</title>
+  <title>FARMÁCIA UBS SATÉLITE | Consulta</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
   <style>
+    /* --- GERAL --- */
     body {
       margin: 0;
-      padding-bottom: 60px;
-      font-family: Arial, sans-serif;
+      padding-bottom: 80px; /* Espaço para o rodapé fixo */
+      font-family: 'Montserrat', Arial, sans-serif;
       background: linear-gradient(-45deg, #1e1e1e, #2a005f, #1f0033, #000000);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
@@ -20,179 +21,636 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    .header { padding: 50px 0; }
+    
+    /* --- CABEÇALHO E VERSÃO --- */
+    .header { padding: 40px 0 20px; }
     .logo { width: 150px; }
     .version {
       position: absolute;
       top: 10px;
       left: 10px;
-      background-color: rgba(0, 123, 255, 0.8);
+      background-color: rgba(0, 123, 255, 0.7);
       color: white;
       padding: 5px 10px;
       border-radius: 5px;
       font-size: 14px;
     }
-    .search-container {
-      margin-top: 50px;
-      margin-bottom: 40px;
-    }
+
+    /* --- ÁREA DE BUSCA E INPUTS --- */
+    .search-container { margin-top: 30px; margin-bottom: 30px; }
     .form-control {
       border-radius: 12px;
       height: 56px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      background-color: #212121;
+      background-color: #2c2c2c;
       color: #ffffff;
       font-size: 16px;
+      border: 1px solid #444;
+      display: flex;
+      align-items: center;
     }
+    .form-control::placeholder { color: #aaa; }
+    .form-control:focus {
+      background-color: #2c2c2c;
+      color: #fff;
+      border-color: #386bf7;
+      box-shadow: 0 0 0 0.2rem rgba(56, 107, 247, 0.25);
+    }
+
+    /* --- FEEDBACK PARA O USUÁRIO --- */
+    #statusMessage {
+      min-height: 24px;
+      margin-top: 20px;
+      text-align: center;
+      font-style: italic;
+      color: #ccc;
+    }
+
+    /* --- BOTÃO ANIMADO --- */
+    .botaoAnimado {
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(130deg, blue, rgb(136, 0, 255), rgb(195, 10, 176));
+      background-size: 400% 400%;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0px 0px 20px rgba(206, 150, 255, 0.1),
+                  inset 2px 2px 4px rgba(255, 255, 255, 0.2),
+                  inset -2px -2px 4px rgba(0, 0, 0, 0.2);
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 16px;
+      font-weight: 500;
+      height: 56px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      animation: gradientAnimation 6s infinite paused;
+    }
+    .botaoAnimado p { transition: all .4s ease-out; margin: 0; }
+    .botaoAnimado svg { transition: all .4s ease-out; width: 20px; height: 20px; opacity: .8; }
+    .botaoAnimado:hover { animation-play-state: running; }
+    .botaoAnimado:hover p { transform: translateX(-150%); opacity: 0; }
+    .botaoAnimado:hover svg {
+      position: absolute;
+      transform: scale(1.5);
+      opacity: 1;
+    }
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* --- TABELA --- */
+    #excelTable {
+      background-color: rgba(30, 30, 30, 0.8);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    #excelTable table { margin-bottom: 0; }
+    #excelTable table thead th {
+      background-color: #386bf7;
+      color: #ffffff;
+      border: none;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    #excelTable table tbody td {
+      color: #ffffff;
+      border-top: 1px solid #444;
+      vertical-align: middle;
+    }
+    #excelTable table tbody tr:nth-child(even) { background-color: #2c2c2c; }
+    #excelTable table tbody tr:nth-child(odd) { background-color: #212121; }
+    #excelTable table tbody tr:hover { background-color: #386af738; }
+
+    /* --- RODAPÉ --- */
     .footer {
       position: fixed;
       bottom: 0;
       width: 100%;
       background-color: #212121;
-      color: #386bf7;
+      color: #ccc;
       padding: 10px 0;
       text-align: center;
+      font-size: 14px;
     }
-    #excelTable table tbody tr:nth-child(odd) { background-color: #1e1e1e; }
-    #excelTable table tbody tr:nth-child(even) { background-color: #212121; }
-    #excelTable table thead th, #excelTable table tbody td { color: #ffffff; }
-    .botaoAnimado {
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(130deg, blue, rgb(136, 0, 255), rgb(195, 10, 176));
-      background-size: 600%;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0px 0px 40px rgba(206, 150, 255, 0.179),
-                  4px 4px 6px rgba(255, 255, 255, 0.293) inset,
-                  -4px -4px 6px rgba(255, 255, 255, 0.293) inset;
-      color: rgba(255, 255, 255, 0.831);
-      font-size: 16px;
-      letter-spacing: 1px;
-      animation: gradientAnimation 6s infinite;
-      animation-play-state: paused;
+    .footer a { color: #386bf7; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* --- UTILITÁRIOS --- */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
       overflow: hidden;
-      cursor: pointer;
-      font-family: Montserrat, sans-serif;
-      font-weight: 500;
-      height: 56px;
-    }
-    .botaoAnimado p {
-      transition: all .5s;
-      margin: 0;
-    }
-    .botaoAnimado svg {
-      transition: all .5s;
-      width: 20px;
-      height: 20px;
-      opacity: .8;
-    }
-    .botaoAnimado:hover svg {
-      animation: flutuacao 2s infinite alternate;
-      margin-left: 40px;
-      margin-right: -40px;
-    }
-    .botaoAnimado:hover {
-      animation-play-state: running;
-    }
-    .botaoAnimado:hover p {
-      transform: translateX(100px);
-    }
-    @keyframes gradientAnimation {
-      0% { background-position: 0%, 50%; }
-      50% { background-position: 100%, 50%; }
-      100% { background-position: 0%, 50%; }
-    }
-    @keyframes flutuacao {
-      0% { transform: translateY(-4px) rotate(32deg); }
-      100% { transform: translateY(8px) rotate(32deg); }
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
   </style>
 </head>
 <body>
 
-<div class="version">Versão 2.1</div>
+<div class="version">Versão 2.2</div>
 
-<div class="container mt-5">
-  <div class="header text-center">
-    <img src="https://www.natal.rn.gov.br/sme/matriculaonline/img/logo_natal_ws.png" alt="Logomarca" class="logo">
-  </div>
-  <h1 class="text-center">UBS SATÉLITE</h1>
+<div class="container mt-4">
+  <header class="header text-center">
+    <img src="https://www.natal.rn.gov.br/sme/matriculaonline/img/logo_natal_ws.png" alt="Logomarca da Prefeitura de Natal" class="logo">
+    <h1 class="mt-3">FARMÁCIA UBS SATÉLITE</h1>
+  </header>
 
-  <div class="search-container">
-    <input type="file" id="inputExcel" class="form-control mb-4">
-    <div class="input-group mb-3">
-      <input type="text" id="searchInput" class="form-control" placeholder="Digite PPS OU MEDICAMENTO">
-      <div class="input-group-append">
-        <button class="botaoAnimado" type="button" id="searchButton">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
-            <path d="M21.71 20.29l-3.388-3.387A8.933 8.933 0 0 0 19 11a9 9 0 1 0-9 9 8.933 8.933 0 0 0 5.902-1.678l3.387 3.388a1 1 0 0 0 1.414-1.414zM4 11a7 7 0 1 1 7 7 7.008 7.008 0 0 1-7-7z"/>
-          </svg>
-          <p>BUSCAR</p>
-        </button>
+  <main>
+    <div class="search-container">
+      <div class="input-group">
+        <label for="searchInput" class="sr-only">Buscar por Código ou Produto</label>
+        <input type="text" id="searchInput" class="form-control" placeholder="Digite o código ou o nome do produto para buscar...">
+        <div class="input-group-append">
+          <button class="botaoAnimado" type="button" id="searchButton">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
+              <path d="M21.71 20.29l-3.388-3.387A8.933 8.933 0 0 0 19 11a9 9 0 1 0-9 9 8.933 8.933 0 0 0 5.902-1.678l3.387 3.388a1 1 0 0 0 1.414-1.414zM4 11a7 7 0 1 1 7 7 7.008 7.008 0 0 1-7-7z"/>
+            </svg>
+            <p>BUSCAR</p>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+    
+    <div id="statusMessage"></div>
+    
+    <div id="excelTable" class="table-responsive"></div>
 
-  <div id="excelTable" class="table-responsive"></div>
+  </main>
 </div>
 
 <footer class="footer">
   <div class="container">
-    <span>Desenvolvido por ANTONIEL SOUSA - Cedido para PAULO H. BRITO | &copy; 2024 Todos os direitos reservados</span>
+    <span>Desenvolvido por <a href="#" target="_blank">ANTONIEL SOUSA</a> | Cedido para PAULO H. BRITO &copy; 2024</span>
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.2/xlsx.full.min.js"></script>
 <script>
-  let rowData = [];
+  // ##################################################################
+  // ##########           DADOS PRÉ-CARREGADOS             ############
+  // ##################################################################
+  const preloadedData = [
+    ["CÓDIGO", "PRODUTO"],
+    ["BR0268370U0042", "ACICLOVIR 200 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0268375U0015", "ACICLOVIR 5 % CREME 10 G"],
+    ["BR0267502U0042", "AAS - ACIDO ACETILSALICÍLICO 100 MG COMPRIMIDO"],
+    ["BR0271689-1", "ACIDO ASCÓRBICO 200 MG/ML SOLUÇÃO ORAL 20 ML"],
+    ["BR0271691", "VITAMINA C- ÁCIDO ASCÓRBICO 500 MG COMPRIMIDO"],
+    ["BR0267503U0042", "ACIDO FÓLICO 5 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0276839U0063", "AGUA DESTILADA SOLUÇÃO INJETÁVEL 10 ML ELENCO ESTADUAL"],
+    ["BR0411827", "AGULHA PARA CANETAS DE INSULINA"],
+    ["BR0267507U0063", "ALBENDAZOL 40 MG/ML SUSPENSÃO ORAL 10 ML"],
+    ["BR0267506U0042", "ALBENDAZOL 400 MG COMPRIMIDO MASTIGÁVEL"],
+    ["BR0269462U0042", "ALENDRONATO DE SÓDIO 70 MG COMPRIMIDO"],
+    ["BR0271660-1", "AMBROXOL, CLORIDRATO 3 MG/ML XAROPE 100 ML"],
+    ["BR0271659-1", "AMBROXOL, CLORIDRATO 6 MG/ML XAROPE 100 ML"],
+    ["BR0353333", "AMOXICILINA + CLAVULANATO DE POTÁSSIO 875 MG + 125 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0271217U0042", "AMOXICILINA + CLAVULANATO DE POTÁSSIO 500 MG + 125 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0271111U0074", "AMOXICILINA 50 MG/ML PÓ PARA SUSPENSÃO 150 ML"],
+    ["BR0271089U0041", "AMOXICILINA 500 MG CÁPSULA"],
+    ["BR0268896U0042", "ANLODIPINO, BESILATO 10 MG COMPRIMIDO"],
+    ["BR0272434U0042", "ANLODIPINO, BESILATO 5 MG COMPRIMIDO"],
+    ["BR0267516", "ATENOLOL 25 MG COMPRIMIDO"],
+    ["BR0267517U0042", "ATENOLOL 50 MG COMPRIMIDO"],
+    ["BR0314517U0108", "AZITROMICINA 40 MG/ML 600 MG PÓ PARA SUSPENSÃO 15 ML ELENCO ESTADUAL"],
+    ["BR0267140U0042", "AZITROMICINA 500 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0270612U0118", "BENZILPENICILINA BENZATINA 1.200.000 UI PÓ PARA SUSPENSÃO INJETÁVEL"],
+    ["BR0270612U0162", "BENZILPENICILINA BENZATINA 1.200.000 UI SUSPENSÃO INJETÁVEL 4 ML"],
+    ["BR0270613U0118", "BENZILPENICILINA BENZATINA 600.000 UI PÓ PARA SUSPENSÃO INJETÁVEL"],
+    ["BR0270616U0118", "BENZILPENICILINA POTÁSSICA 5.000.000 UI PÓ PARA SOLUÇÃO INJETÁVEL"],
+    ["BR0270614U0118", "BENZILPENICILINA PROCAÍNA + BENZILPENICILINA POTÁSSICA 400.000 UI PÓ PARA SUSPENSÃO INJETÁVEL"],
+    ["BR0269821", "BROMEXINA, CLORIDRATO 1,6 MG/ML XAROPE 120 ML"],
+    ["BR0266706U0066", "BUDESONIDA 32 MCG/DOSE SUSPENSÃO NASAL 120 DOSES"],
+    ["BR0267613U0042", "CAPTOPRIL 25 MG COMPRIMIDO"],
+    ["BR0267615", "CAPTOPRIL 50 MG COMPRIMIDO"],
+    ["BR0267564U0042", "CARVEDILOL 12,5 MG COMPRIMIDO"],
+    ["BR0267567U0042", "CARVEDILOL 25 MG COMPRIMIDO"],
+    ["BR0267566U0042", "CARVEDILOL 3,125 MG COMPRIMIDO"],
+    ["BR0267565U0042", "CARVEDILOL 6,25 MG COMPRIMIDO"],
+    ["BR0331555U0062", "CEFALEXINA 50 MG/ML SUSPENSÃO ORAL 100 ML"],
+    ["BR0267625U0041", "CEFALEXINA 500 MG CÁPSULA"],
+    ["BR0308736-2", "CETOCONAZOL 2% CREME 30 G"],
+    ["BR0308736-3", "CETOCONAZOL 2% CREME 50 G"],
+    ["BR0267151", "CETOCONAZOL 200 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0272166", "CICLOBENZAPRINA, CLORIDRATO 5 MG COMPRIMIDO"],
+    ["BR0267632U0042", "CIPROFLOXACINO, CLORIDRATO 500 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0268436U0041", "CLINDAMICINA, CLORIDRATO 300 MG CÁPSULA"],
+    ["BR0272045", "CLOPIDOGREL, BISSULFATO 75 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0268236U0039", "CLORETO DE SÓDIO 0,9 % SOLUÇÃO INJETÁVEL 500 ML SISTEMA FECHADO"],
+    ["BR0368654U0004", "CLORETO DE SÓDIO 0,9% SOLUÇÃO INJETÁVEL 10 ML ELENCO ESTADUAL"],
+    ["BR0268236U0034", "CLORETO DE SÓDIO 0,9% SOLUÇÃO INJETÁVEL 100 ML SISTEMA FECHADO"],
+    ["BR0268236U0037", "CLORETO DE SÓDIO 0,9% SOLUÇÃO INJETÁVEL 250 ML SISTEMA FECHADO"],
+    ["BR0382563", "CLORETO DE SÓDIO 10% SOLUÇÃO INJETÁVEL 10 ML"],
+    ["BR0267574U0004", "CLORETO DE SÓDIO 20% SOLUÇÃO INJETÁVEL 10 ML ELENCO ESTADUAL"],
+    ["BR0268958-2", "COLAGENASE 0,6 UI/G POMADA 30 G"],
+    ["BR0267643U0015", "DEXAMETASONA 0,1 % CREME 10 G"],
+    ["BR0269388U0042", "DEXAMETASONA 4 MG COMPRIMIDO"],
+    ["BR0267646U0062", "DEXCLORFENIRAMINA, MALEATO 0,4 MG/ML SOLUÇÃO ORAL 100 ML"],
+    ["BR0267645U0042", "DEXCLORFENIRAMINA, MALEATO 2 MG COMPRIMIDO"],
+    ["BR0270992", "DICLOFENACO POTÁSSICO 50 MG COMPRIMIDO"],
+    ["BR0271000", "DICLOFENACO SÓDICO 50 MG COMPRIMIDO"],
+    ["BR0267647U0042", "DIGOXINA 0,25 MG COMPRIMIDO"],
+    ["BR0267203U0042", "DIPIRONA SÓDICA 500 MG COMPRIMIDO"],
+    ["BR0268252U0009", "DIPIRONA SÓDICA 500 MG/ML SOLUÇÃO INJETÁVEL 2 ML"],
+    ["BR0267205U0063", "DIPIRONA SÓDICA 500 MG/ML SOLUÇÃO ORAL 10 ML"],
+    ["BR0269963", "DOMPERIDONA 1 MG/ML SUSPENSÃO ORAL 100 ML"],
+    ["BR0269962", "DOMPERIDONA 10 MG COMPRIMIDO"],
+    ["BR0287687", "EFEDRINA, SULFATO 50 mg/ml SOLUÇÃO INJETÁVEL 1 ML"],
+    ["BR0267651U0042", "ENALAPRIL, MALEATO 10 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0267650U0042", "ENALAPRIL, MALEATO 5 MG COMPRIMIDO"],
+    ["BR0291770", "ESCITALOPRAM, OXALATO 10 mg COMPRIMIDO"],
+    ["BR0270622-1", "ESCOPOLAMINA, BUTILBROMETO + DIPIRONA SÓDICA 6,67 + 333,4 MG/ML SOLUÇÃO ORAL 10 ML"],
+    ["BR0270622", "ESCOPOLAMINA, BUTILBROMETO + DIPIRONA SÓDICA 6,67 + 333,4 MG/ML SOLUÇÃO ORAL 20 ML"],
+    ["BR0267281-1", "ESCOPOLAMINA, BUTILBROMETO 10 MG/ML SOLUÇÃO ORAL 20 ML"],
+    ["BR0267208U0029", "ESTRIOL 1 MG/G CREME VAGINAL 50 G"],
+    ["BR0267256", "FENOTEROL, BROMIDRATO 5 MG/ML SOLUÇÃO PARA NEBULIZAÇÃO 20 ML ELENCO ESTADUAL"],
+    ["BR0267662U0041", "FLUCONAZOL 150 MG CÁPSULA"],
+    ["BR0267666U0009", "FUROSEMIDA 10 MG/ML SOLUÇÃO INJETÁVEL 2 ML"],
+    ["BR0267663U0042", "FUROSEMIDA 40 MG COMPRIMIDO"],
+    ["BR0267671U0042", "GLIBENCLAMIDA 5 MG COMPRIMIDO"],
+    ["BR0270092U0037", "GLICOSE 5 % SOLUÇÃO INJETÁVEL 250 ML SISTEMA FECHADO"],
+    ["BR0270092U0039", "GLICOSE 5 % SOLUÇÃO INJETÁVEL 500 ML SISTEMA FECHADO"],
+    ["BR0267541U0004", "GLICOSE 50 % SOLUÇÃO INJETÁVEL 10 ML"],
+    ["BR0273121", "GLIMEPIRIDA 4 MG COMPRIMIDO"],
+    ["BR0268115", "HIDRALAZINA, CLORIDRATO 20 MG/ML SOLUÇÃO INJETÁVEL"],
+    ["BR0268111U0046", "HIDRALAZINA, CLORIDRATO 25 MG DRÁGEA"],
+    ["BR0267674U0042", "HIDROCLOROTIAZIDA 25MG COMPRIMIDO"],
+    ["BR0270220U0118", "HIDROCORTISONA, SUCCINATO SÓDICO 100MG PÓ PARA SOLUÇÃO INJETÁVEL"],
+    ["BR0342134U0118", "HIDROCORTISONA, SUCCINATO SÓDICO 500MG PÓ PARA SOLUÇÃO INJETÁVEL"],
+    ["BR0433257U0087", "HIDRÓXIDO DE ALUMÍNIO 60 MG/ML SUSPENSÃO ORAL 240 ML"],
+    ["BR0267677U0042", "IBUPROFENO 300 MG COMPRIMIDO"],
+    ["BR0332755U0097", "IBUPROFENO 100 MG/ML SUSPENSÃO ORAL 30 ML"],
+    ["BR0271157U0063", "INSULINA HUMANA NPH FRASCO"],
+    ["BR0271157U0137", "INSULINA HUMANA NPH CANETA"],
+    ["BR0271154U0063", "INSULINA HUMANA REGULAR FRASCO"],
+    ["BR0271154U0137", "INSULINA HUMANA REGULAR CANETA"],
+    ["BR0268331U0086", "IPRATRÓPIO, BROMETO 0,25 MG/ML SOLUÇÃO PARA INALAÇÃO 20 ML ELENCO ESTADUAL"],
+    ["BR0273395U0042", "ISOSSORBIDA, DINITRATO 5 MG COMPRIMIDO SUBLINGUAL"],
+    ["BR0273400U0042", "ISOSSORBIDA, MONONITRATO 20 MG COMPRIMIDO"],
+    ["BR0268861U0041", "ITRACONAZOL 100 MG CÁPSULA"],
+    ["BR0273328U0041", "IVERMECTINA 6 MG CÁPSULA"],
+    ["BR0273328U0042", "IVERMECTINA 6 MG COMPRIMIDO"],
+    ["BR0332985", "LEVOFLOXACINO 5 MG/ML SOLUÇÃO INJETÁVEL 100 ML"],
+    ["BR0305270U0042", "LEVOFLOXACINO 500 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0272789U0042", "LEVONORGESTREL + ETINILESTRADIOL 0,15 + 0,03 MG COMPRIMIDO"],
+    ["BR0268956U0042", "LEVONORGESTREL 0,75 MG COMPRIMIDO"],
+    ["BR0268125U0042", "LEVOTIROXINA SÓDICA 100 MCG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0268124U0042", "LEVOTIROXINA SÓDICA 25 MCG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0268123U0042", "LEVOTIROXINA SÓDICA 50 MCG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0268859", "LEVOTIROXINA SÓDICA 75 MCG COMPRIMIDO"],
+    ["BR0269846U0023", "LIDOCAÍNA, CLORIDRATO 20 MG/G GEL 30 G"],
+    ["BR0273467U0062", "LORATADINA 1 MG/ML XAROPE 100 ML"],
+    ["BR0273466U0042", "LORATADINA 10 MG COMPRIMIDO"],
+    ["BR0268856U0042", "LOSARTANA POTÁSSICA 50 MG COMPRIMIDO"],
+    ["BR0398702U0005", "MEDROXIPROGESTERONA, ACETATO 150 MG/ML SUSPENSÃO INJETÁVEL 1 ML"],
+    ["BR0267690U0042", "METFORMINA, CLORIDRATO 500 MG COMPRIMIDO"],
+    ["BR0267691U0042", "METFORMINA, CLORIDRATO 850 MG COMPRIMIDO"],
+    ["BR0267689U0042", "METILDOPA 250 MG MG COMPRIMIDO"],
+    ["BR0267688", "METILDOPA 500 MG COMPRIMIDO"],
+    ["BR0267311U0063", "METOCLOPRAMIDA, CLORIDRATO 4 MG/ML SOLUÇÃO ORAL 10 ML"],
+    ["BR0276656U0042", "METOPROLOL, SUCCINATO 25 MG COMPRIMIDO DE LIBERAÇÃO PROLONGADA"],
+    ["BR0345259", "METOPROLOL, TARTARATO 1 MG/ML SOLUÇÃO INJETÁVEL 5 ML"],
+    ["BR0394650U0042", "METOPROLOL, TARTARATO 100 MG COMPRIMIDO"],
+    ["BR0266863U0062", "METRONIDAZOL (BENZOILMETRONIDAZOL) 40 MG/ML SUSPENSÃO ORAL 100 ML"],
+    ["BR0345300", "METRONIDAZOL 100 MG/G CREME VAGINAL 50 G"],
+    ["BR0338591U0030", "METRONIDAZOL 100MG/G GEL 50MG"],
+    ["BR0267717U0042", "METRONIDAZOL 250 MG COMPRIMIDO"],
+    ["BR0268498", "METRONIDAZOL 5 MG/ML SOLUÇÃO INJETÁVEL 100 ML"],
+    ["BR0268162U0031", "MICONAZOL, NITRATO 2 % CREME VAGINAL 80 G"],
+    ["BR0273167-2", "NEOMICINA + BACITRACINA 5 + 250 MG + UI/G POMADA 15 G"],
+    ["BR0267728U0042", "NIFEDIPINO 10 MG COMPRIMIDO"],
+    ["BR0267730", "NIFEDIPINO 10 MG COMPRIMIDO DE LIBERAÇÃO PROLONGADA"],
+    ["BR0267729", "NIFEDIPINO 20 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0273710", "NIMESULIDA 100 MG COMPRIMIDO"],
+    ["BR0270846U0005", "NORETISTERONA, ENANTATO DE + ESTRADIOL, VALERATO DE 50 + 5 MG/ML SOLUÇÃO INJETÁVEL 1 ML"],
+    ["BR0267733U0042", "NORETISTERONA 0,35 MG COMPRIMIDO"],
+    ["BR0268851", "NORFLOXACINO 400 MG COMPRIMIDO"],
+    ["BR0233632U0062", "ÓLEO MINERAL (PETROLATO) SOLUÇÃO ORAL 100 ML"],
+    ["BR0267712U0041", "OMEPRAZOL 20 MG CÁPSULA ELENCO ESTADUAL"],
+    ["BR0268160", "OMEPRAZOL 40 MG PÓ PARA SOLUÇÃO INJETÁVEL"],
+    ["BR0379902U0041", "OSELTAMIVIR, FOSFATO 30 MG CÁPSULA"],
+    ["BR0401411", "ÓXIDO DE ZINCO + COLECALCIFEROL + RETINOL 100+ 1000+ 400 MG + UI/G POMADA 45 G"],
+    ["BR0279493-2", "ÓXIDO DE ZINCO + COLECALCIFEROL + RETINOL 150 + 5000 + 900 MG + UI + UI/G POMADA 45 G"],
+    ["BR0267777U0075", "PARACETAMOL 200 MG/ML SOLUÇÃO ORAL 15 ML"],
+    ["BR0267777U0086", "PARACETAMOL 200 MG/ML SOLUÇÃO ORAL 20 ML"],
+    ["BR0267779", "PARACETAMOL 750 MG COMPRIMIDO"],
+    ["BR0363597U0110", "PERMETRINA 50 MG/ML LOÇÃO 60 ML"],
+    ["BR0275119", "PREDNISOLONA 20 MG COMPRIMIDO"],
+    ["BR0268150U0062", "PREDNISOLONA 3 MG/ML SOLUÇÃO ORAL 100 ML"],
+    ["BR0268150U0067", "PREDNISOLONA 3 MG/ML SOLUÇÃO ORAL 120 ML"],
+    ["BR0267743U0042", "PREDNISONA 20 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0267741U0042", "PREDNISONA 5 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0267768U0042", "PROMETAZINA, CLORIDRATO 25 MG COMPRIMIDO"],
+    ["BR0267769U0009", "PROMETAZINA, CLORIDRATO 25 MG/ML SOLUÇÃO INJETÁVEL 2 ML"],
+    ["BR0305935-4", "PROPOFOL 10 MG/ML EMULSÃO INJETÁVEL 100 ML"],
+    ["BR0305935-2", "PROPOFOL 10 MG/ML EMULSÃO INJETÁVEL 20 ML"],
+    ["BR0267772U0042", "PROPRANOLOL, CLORIDRATO 40 MG COMPRIMIDO"],
+    ["BR0303292U0039", "RINGER LACTATO SÓDICO SOLUÇÃO INJETÁVEL 500 ML SISTEMA FECHADO"],
+    ["BR0352192", "RINGER SIMPLES SOLUÇÃO INJETÁVEL 500 ML SISTEMA FECHADO"],
+    ["BR0268521", "ROCURÔNIO, BROMETO 10 MG/ML SOLUÇÃO INJETÁVEL 5 ML"],
+    ["BR0268390U0052", "SAIS PARA REIDRATAÇÃO ORAL (NaCl 3,5G + Glicose 20G + Citrato Na 2,9G + KCl 1,5G) 27,9 G PÓ PARA SOLUÇÃO"],
+    ["BR0294887U0084", "SALBUTAMOL, SULFATO 100 MCG/DOSE AEROSSOL 200 DOSES ELENCO ESTADUAL"],
+    ["BR0268299", "SECNIDAZOL 1.000 MG COMPRIMIDO"],
+    ["BR0412965", "SIMETICONA 75 MG/ML SOLUÇÃO ORAL 15 ML"],
+    ["BR0412965-1", "SIMETICONA 75 MG/ML SUSPENSÃO ORAL 10 ML"],
+    ["BR0267747U0042", "SINVASTATINA 20 MG COMPRIMIDO"],
+    ["BR0267745U0042", "SINVASTATINA 40 MG COMPRIMIDOBR0272089U0023SULFADIAZINA DE PRATA 1% CREME 30 G"],
+    ["BR0272089U0029", "SULFADIAZINA DE PRATA 1% CREME 50 G"],
+    ["BR0267765U0042", "SULFADIAZINA 500 MG COMPRIMIDO"],
+    ["BR0308882U0042", "SULFAMETOXAZOL + TRIMETOPRIMA 400 + 80 MG COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0292345U0097", "SULFATO FERROSO (25MG/ML DE FERRO ELEMENTAR) 125 MG/ML SOLUÇÃO ORAL 30 ML ELENCO ESTADUAL"],
+    ["BR0292344U0042", "SULFATO FERROSO (40MG DE FERRO ELEMENTAR) COMPRIMIDO ELENCO ESTADUAL"],
+    ["BR0271581", "TOBRAMICINA 0,3 % SOLUÇÃO OFTÁLMICA 5 ML"],
+    ["BR0437109", "VITAMINAS DO COMPLEXO B (B1,B2,B3,B5,B6) COMPRIMIDO"],
+    ["BR0348807", "ABAIXADOR DE LÍNGUA, MADEIRA"],
+    ["BR0397502", "AGULHA HIPODÉRMICA, DESCARTÁVEL 25 X 0,8"],
+    ["BR0397494", "AGULHA HIPODÉRMICA, DESCARTÁVEL 40 X 1,2"],
+    ["BR0279638", "AGULHA, HIPODÉRMICA, DESCARTÁVEL 13 X 4,5"],
+    ["BR0279630", "AGULHA, HIPODÉRMICA, DESCARTÁVEL 25 X 7"],
+    ["BR0279633", "AGULHA, HIPODÉRMICA, DESCARTÁVEL 30 X 8"],
+    ["BR0269943U0144", "ALCOOL ETÍLICO 70% GEL 5000 ML"],
+    ["BR0269941U0060", "ALCOOL ETÍLICO 70% SOLUÇÃO 1 L"],
+    ["BR0357239", "ALCOOL ETÍLICO 99,5 % SOLUÇÃO 1000 ML"],
+    ["BR0320817", "ALGODÃO , HIDRÓFILO,500 G, SANFONADO, BRANCA"],
+    ["BR0279726U0429", "ALGODÃO, HIDRÓFILO, EM MANTAS, NÃO ESTÉRIL 250 G"],
+    ["BR0383602", "ATADURA, CREPOM, 100% 10 CM"],
+    ["BR0383603", "ATADURA, CREPOM, 100% 12 CM"],
+    ["BR0383606", "ATADURA, CREPOM, 100% 15 CM"],
+    ["BR0383604", "ATADURA, CREPOM, 100% 20 CM"],
+    ["BR0383599", "ATADURA, CREPOM, 100% ALGODÃO, 25 CM"],
+    ["BR0383605", "ATADURA, CREPOM, 100% ALGODÃO, 30 CM"],
+    ["BR0479039", "CURATIVO BIATAIN- ESPUMA COM PRATA"],
+    ["BR0484847", "CURATIVO BIATAIN ALGINATO"],
+    ["BR0479038", "BANDAGEM K2"],
+    ["BR0432576", "COMPRESSA GAZE ANTIMICROBIANA"],
+    ["BR0396708", "COMPRESSA GAZE RAYON"],
+    ["BR0406176", "CURATIVO, HIDROCOLÓIDE"],
+    ["BR0432618", "CURATIVO ACQUACEL"],
+    ["BR0448241", "CURATIVO, HIDROGEL"],
+    ["BR0485038", "CURATIVO ALLEVYN"],
+    ["BR0357711", "FILME TRANSPARENTE"],
+    ["BR0471162", "PHMB"],
+    ["BR0356040", "CREME DE BARREIRA"],
+    ["BR0311233-3", "CARVÃO ATIVADO"],
+    ["BR0282636", "CATETER INTRAVENOSO N° 14 (JELCO)"],
+    ["BR0278829", "CATETER INTRAVENOSO Nº 16 G (JELCO)"],
+    ["BR0282631", "CATETER INTRAVENOSO N°18 G (JELCO)"],
+    ["BR0282632", "CATETER INTRAVENOSO Nº 20 G (JELCO)"],
+    ["BR0282633", "CATETER INTRAVENOSO Nº 22 G, (JELCO)"],
+    ["BR0282635", "CATETER INTRAVENOSO Nº 24 G, (JELCO)"],
+    ["BR0437164", "CATETER VENOSO PERIFÉRICO, TIPO ESCALPE Nº19 G"],
+    ["BR0437166", "CATETER VENOSO PERIFÉRICO, , TIPO ESCALPE N°21 G"],
+    ["BR0437167", "CATETER VENOSO, PERIFÉRICO, TIPO ESCALPE, Nº23 G"],
+    ["BR0437165", "CATETER VENOSO, PERIFÉRICO, TIPO ESCALPE Nº25 G"],
+    ["BR0437187", "CATETER VENOSO PERIFÉRICO, , TIPO ESCALPE, , 27 G"],
+    ["BR0295714-1", "CLOREXIDINA DIGLICONATO, LÍQUIDO, EM SOLUÇÃO AQUOSA À 0,2% 1000 ML"],
+    ["BR0269876U0060", "CLOREXIDINA, DIGLICONATO 2% SOLUÇÃO DEGERMANTE 1000 ML"],
+    ["BR0269878U0060", "CLOREXIDINA, DIGLUCONATO 0,5 % SOLUÇÃO ALCOÓLICA 1000 ML"],
+    ["BR0419371", "COLETOR DE URINA, PVC, SISTEMA FECHADO, CERCA DE 2000 ML, GRADUADO ESTÉRIL"],
+    ["BR0428464U0908", "COLETOR DE URINA SEMI-ABERTO FRASCO 1500 A 2000 ML GRADUADO NÃO ESTÉRIL"],
+    ["BR0321571", "COLETOR MATERIAL PERFURO - CORTANTE, 7 L, AMARELA,C/SIMBOLOGIA"],
+    ["BR0321570", "COLETOR MATERIAL PERFURO- CORTANTE 13 L, AMARELA, C/SIMBOLOGIA"],
+    ["BR0269972", "COMPRESSA DE GAZE, 7,50 CM, X 7,50 CM, DESCARTÁVEL NÃO ESTERIL PCT C/250"],
+    ["BR0269978", "COMPRESSA DE GAZE ESTÉRIL , 7,50 X 7,50 PCT C/10"],
+    ["BR0272020", "COMPRESSA DE GAZE EM ROLO 91 X 91CM , TIPO QUEIJO"],
+    ["BR0405740", "CONJUNTO PARA PAPANICOLAU : 1 ESPÉCULO VAGINAL TAM. GRANDE (KIT PREVENTIVO)"],
+    ["BR0405739", "CONJUNTO PARA PAPANICOLAU: 1 ESPÉCULO VAGINAL TAM. MÉDIO (KIT PREVENTIVO)"],
+    ["BR0405738", "CONJUNTO PARA PAPANICOLAU: 1 ESPÉCULO VAGINAL TAM. PEQUENO (KIT PREVENTIVO)"],
+    ["BR0328077-1", "DETERGENTE ENZIMÁTICO 1000 ML"],
+    ["BR0297746U0140", "DISPOSITIVO INTRA-UTERINO (DIU)"],
+    ["BR0390708", "EQUIPO, DE INFUSÃO, MICROGOTAS, ESTÉRIL,DESCARTÁVEL"],
+    ["BR0385209", "EQUIPO DE INFUSÃO MACRO -GOTAS C/INJETOR LATERAL"],
+    ["BR0278500", "ESPARADRAPO, 10CM, 4,50 M, IMPERMEÁVEL"],
+    ["BR0279065-1", "FITA ADESIVA, HOSPITALAR 16 MM X 50 M, BRANCA"],
+    ["BR0281523", "FITA ADESIVA, MICROPOROSA, 50 MM, 10 M, (MICROPORE)"],
+    ["BR0230812", "FITA P/AUTOCLAVE, 30 M, 19 MM,"],
+    ["BR0279890", "FRASCO - TIPO ALMOTOLIA, 250 ML, TRANSPARENTE (ALMOTOLIA)"],
+    ["BR0279899", "FRASCO - TIPO ALMOTOLIA, 250 ML, ÂMBAR (ALMOTOLIA)"],
+    ["BR0317676", "FRASCO COLETOR DE URINA 50 A 80 ML, ESTÉRIL, (COLETOR UNIVERSAL ESTÉRIL)"],
+    ["BR0436312", "FRASCO COLETOR, UNIVERSAL CERCA DE 50 ML NÃO ESTÉRIL (TAMPA BRANCA)"],
+    ["BR0325424U0541", "GEL LUBRIFICANTE - SACHÊ 5G"],
+    ["BR0275238-4", "GEL CONDUTOR PARA ULTRASSONOGRAFIA 1 KG"],
+    ["BR0275238-2", "GEL CONDUTOR PARA ULTRASSONOGRAFIA 300 G"],
+    ["BR0437161U0457", "HIPOCLORITO DE SÓDIO 1 % SOLUÇÃO AQUOSA 5 LITROS"],
+    ["BR0226967", "LÂMINA FOSCA P/ MICROSCOPIO CORTADA"],
+    ["BR0239064", "LÂMINA BISTURI, AÇO INOXIDÁVEL, Nº 11 DESCARTÁVEL, ESTÉRIL,"],
+    ["BR0313628", "LÂMINA BISTURI Nº 12, AÇO CARBONO DESCARTÁVEL, ESTÉRIL,"],
+    ["BR0244244", "LÂMINA BISTURI, AÇO INOXIDÁVEL, Nº 15 DESCARTÁVEL, ESTÉRIL,"],
+    ["BR0273179", "LÂMINA BISTURI, AÇO CARBONO, Nº 21 DESCARTÁVEL, ESTÉRIL,"],
+    ["BR0313631", "LÂMINA BISTURI, AÇO CARBONO, Nº 23, DESCARTÁVEL, ESTÉRIL,"],
+    ["BR0299240", "LÂMINA BISTURI, AÇO CARBONO, Nº 24 DESCARTÁVEL, ESTÉRIL,"],
+    ["BR0303151U0140", "LANCETA, AÇO INOXIDÁVEL DESCARTÁVEL"],
+    ["BR0327212", "LUGOL FORTR 5% 1000 ML"],
+    ["BR0269946", "LUVA CIRÚRGICA, 6,5,LÁTEX NATURAL ESTÉRIL"],
+    ["BR0276342", "LUVA CIRÚRGICA, LÁTEX NATURAL,7, ESTÉRIL"],
+    ["BR0276341", "LUVA CIRÚRGICA LÁTEX NATURAL,7,5, ESTÉRIL"],
+    ["BR0276340", "LUVA CIRÚRGICA, LÁTEX NATURAL, 8, ESTÉRIL"],
+    ["BR0269947", "LUVA CIRÚRGICA, LÁTEX NATURAL,8,50, ESTÉRIL"],
+    ["BR0269891", "LUVA PARA PROCEDIMENTO NÃO CIRÚRGICO, EXTRAPEQUENA, LÁTEX NATURAL, COM PÓ BIOABSORVÍVEL"],
+    ["BR0269894", "LUVA PARA PROCEDIMENTO P"],
+    ["BR0269893", "LUVA PARA PROCEDIMENTO M"],
+    ["BR0269892", "LUVA PARA PROCEDIMENTO G"],
+    ["BR0399612", "MASCARA DESCARTÁVEL KN95"],
+    ["BR0313379", "MÁSCARA N95, CLASSE PFF-2"],
+    ["BR0341923", "MÁSCARA CIRÚRGICA, NÃO TECIDO 3 CAMADAS DESCARTÁVEL"],
+    ["BR0389556", "MONITOR P/ MEDIR GLICEMIA CAPILAR (GLICOSÍMETRO)"],
+    ["BR0244064", "ÓCULOS DE PROTEÇÃO FACIAL"],
+    ["BR0244064", "PAPEL GRAU CIRÚRGICO"],
+    ["BR0438072", "PAPEL GRAU CIRÚRGICO CERCA DE 50 CM, 100 M"],
+    ["BR0274398", "PAPEL GRAU CIRÚRGICO, 15 CM, 100 M"],
+    ["BR0274395", "PAPEL GRAU CIRÚRGICO 45 CM, 100M"],
+    ["BR0349495", "PAPEL GRAU CIRÚRGICO, 30CM 100CM"],
+    ["BR0442530", "PAPEL CREPADO P/ ESTERELIZÇÃO , CERCA DE 120 X 120 CM"],
+    ["BR0375256", "PAPEL CREPADADO P/ ESTERELIZAÇÃO, CERCA DE 50 X 50 CM"],
+    ["BR0375252", "PAPEL CREPADADO P/ ESTERELIZAÇÃO, CERCA DE 100 X 100 CM"],
+    ["BR0375264", "PAPEL CREPADO P/ESTERELIZAÇÃO CERCA DE 40X40 CM"],
+    ["BR0442439-1", "PAPEL CREPADO, P/ESTERELIZAÇÃO CERCA 30 X 30 CM,"],
+    ["BR0273196", "PAPEL P/ ECG 48MM X 30MM"],
+    ["BR0424406", "PAPEL P/ECG 216MM X 30MM"],
+    ["BR0373093", "PAPEL P/ECG 50MM X 30M/"],
+    ["BR0269396-2", "PAPEL TERMOSENSÍVEL, 216 MM, x 280 MM, ECG"],
+    ["BR0269396", "PAPEL P/ECG 80 MM, 30 M"],
+    ["BR0454804", "PAPEL PARA CARDIOTOCÓGRAFO 100X120"],
+    ["BR0352012", "PAPEL LENÇOL DESCARTÁVEL"],
+    ["BR0377083", "PERFURADOR DE MEMBRANA ANMINIÓTICA"],
+    ["BR0412639", "PORTA LÂMINA"],
+    ["BR0426622", "PRESERVATIVO FEMININO DE BORRACHA"],
+    ["BR0272914U0140", "PRESERVATIVO MASCULINO COM LUBRIFICANTE - 52mm"],
+    ["BR0282013", "PRÓ-PÉ DESCARTÁVEL (SAPATILHA DESCARTÁVEL)"],
+    ["BR0308648", "PROTETOR FACIAL (FACE SHILD)"],
+    ["BR0114693-2", "PULSEIRA IDENTIFICACAO, COR AMARELA"],
+    ["BR0114693-5", "PULSEIRA IDENTIFICAÇÃO COR AZUL"],
+    ["BR0114693-7", "PULSEIRA IDENTIFICAÇÃO COR BRANCA"],
+    ["BR0114693-1", "PULSEIRA IDENTIFICACAO, COR VERMELHA"],
+    ["BR0257076", "PULSEIRA DE INDENTIFICAÇÃO MÃE E FILHO"],
+    ["BR0362329", "SERINGA HIPODÉRMICA DESCARTÁVEL 0,5 ML"],
+    ["BR0357861", "SERINGA HIPODÉRMICA DESCARTÁVEL 1ML"],
+    ["BR0291012", "SERINGA 3 ML POLIPROPILENO + AGULHA 25 MM X 7 MM LUER SLIP (BICO)"],
+    ["BR0279406", "SERINGA HIPODÉRMICA DESCARTÁvel 3 ML LUER LOOK (ROSCA)"],
+    ["BR0292118", "SERINGA 5 ML POLIPROPILENO+ AGULHA 25 X 7 LUER SLIP (BICO)"],
+    ["BR0428920", "SERINGA HIPODÉRMICA DESCARTÁVEL 5 ML LUER LOOK (ROSCA)"],
+    ["BR0298557", "SERINGA HIPODÉRMICA DESCARTÁVEL 10ML LUER SLIP (BICO)"],
+    ["BR0292119", "SERINGA 20 ML POLIPROPILENO + AGULHA 25 MM X 7 MM LUER SLIP (BICO)"],
+    ["BR0279410", "SERINGA HIPODÉRMICA DESCARTÁVEL 20 ML LUER LOOK ROSCA)"],
+    ["BR0275896", "SISTEMA DE ASPIRAÇÃO ENDOTRAQUEAL FECHADO Nº12"],
+    ["BR0454397", "SISTEMA DE ASPIRAÇÃO ENDOTRAQUEAL FECHADO Nº14"],
+    ["BR0435901", "SONDA TRATO DIGESTIVO, NASOENTERAL, POLIURETANO, Nº 10"],
+    ["BR0435902", "SONDA TRATO DIGESTIVO, NASOENTERAL, POLIURETANO, Nº 12"],
+    ["BR0357170", "SONDA FOLEY MATERIL LATÉX Nº 10 2 VIAS"],
+    ["BR0277016", "SONDA FOLEY MATERIL LATÉX Nº 12 2 VIAS"],
+    ["BR0277017", "SONDA FOLEY MATERIL LATÉX Nº 14 2 VIAS"],
+    ["BR0277018", "SONDA FOLEY MATERIL LATÉX Nº 16 2 VIAS"],
+    ["BR0277019", "SONDA FOLEY MATERIL LATÉX Nº 18 2 VIAS"],
+    ["BR0277020", "SONDA FOLEY MATERIL LATÉX Nº 20 2 VIAS"],
+    ["BR0279770", "SONDA FOLEY MATERIAL LATÉX N° 22 2VIAS"],
+    ["BR0277027", "SONDA FOLEY MATERIAL LATÉX N° 24 3 VIAS"],
+    ["BR0436837", "SONDA FOLEY, MATERIAL SILICONE, N° 18, VIAS 3 VIAS"],
+    ["BR0277025", "SONDA FOLEY MATERIAL LATÉX Nº 20 3 VIAS"],
+    ["BR0277026", "SONDA FOLEY MATERIAL LATÉX N°22 3 VIAS"],
+    ["BR0274622", "SONDA NASOGÁSTRICA CURTA N° 06"],
+    ["BR0276140", "SONDA NASOGÁSTRICA CURTA N° 08"],
+    ["BR0435901", "SONDA NASOGÁSTRICA CURTA N° 10"],
+    ["BR0279738", "SONDA NASOGÁSTRICA CRUTA N° 12"],
+    ["BR0274630", "SONDA NASOGASTRICA CURTA N° 14"],
+    ["BR0270551", "SONDA NASOGASTRICA CURTAA Nº 16"],
+    ["BR0274628", "SONDA NASOGÁSTRICA CURTA Nº 18"],
+    ["BR0277377", "SONDA NASOGÁTRIA LONGA Nº 04"],
+    ["BR0277373", "SONDA NASOGASTRICA LONGA Nº 06"],
+    ["BR0435900", "SONDA NASOGASTRICA LONGA Nº 08"],
+    ["BR0277374", "SONDA NASOGASTRICA LONGA Nº 10"],
+    ["BR0351314", "SONDA NASOGASTRICA LONGA Nº 12"],
+    ["BR0435908", "SONDA NASOAGASTRICA LONGA Nº 14"],
+    ["BR0435909", "SONDA NASOGASTRICA LONGA Nº 16"],
+    ["BR0311090", "SONDA NASOGASTRICA LONGA Nº 18"],
+    ["BR0277375", "SONDA NASOGASTRICA LONGA Nº 20"],
+    ["BR0311092", "SONDA NASOGASTRICA LONGA Nº 22"],
+    ["BR0275887", "SONDA URETRAL N° 04, PVC ATÓXICO SILICONIZADO, ESTÉRIL"],
+    ["BR0282608", "SONDA URETRAL Nº06 PVC ATÓXICO SILICONIZADO ESTÉRIL"],
+    ["BR0282611", "SONDA URETRAL N° 08, PVC ATÓXICO SILICONIZADO, ESTÉRIL"],
+    ["BR0282374", "SONDA URETRAL N° 10, SILICONE, ESTÉRIL"],
+    ["BR0282375", "SONDA URETRAL N° 12, SILICONE, ESTÉRIL"],
+    ["BR0282376", "SONDA URETRAL N° 14, SILICONE, ESTÉRIL"],
+    ["BR0282609", "SONDA URETRAL Nº 18, SILICONE, ESTÉRIL"],
+    ["BR0282610", "SONDA URETRAL Nº 20, SILICONE, ESTÉRIL"],
+    ["BR0278684", "SONDA URETRAL, Nº 16 SILICONE ,ESTÉRIL"],
+    ["BR0384586", "TAMPA PROTETORA MACHO E FÊMEA"],
+    ["BR0302929", "TELA CIRÚRGICA DE POLIPROPILENO 30 X30"],
+    ["BR0310567", "TELA CIRÚRGICA DE POLIPROPILENO 7,5X7,5"],
+    ["BR0469638", "TALAS PARA IMOBILIZAÇÃO METAL TAMANHOS VARIADOS PP,P,M E G"],
+    ["BR0276049", "TALA ORTOPÉDICA, ALUMÍNIO E ESPUMA, 180 MM X 16 MM"],
+    ["BR0276049-1", "TALA ORTOPÉDICA, ALUMÍNIO E ESPUMA, 250 MM X 12 MM"],
+    ["BR0288508", "TALA ORTOPÉDICA, PAPELÃO, MEMBROS INFERIORES, ARTICULÁVEL, ADULTO TAMANHOS DIVERSOS"],
+    ["BR0288509", "TALA ORTOPÉDICA, PAPELÃO MEMBROS SUPERIORES, ARTICULÁVEL, ADULTO TAMANHOS DIVERSOS"],
+    ["BR0414674-1", "TERMO HIGRÔMETRO DIGITAL - TERMÔMETRO"],
+    ["BR0435801", "TERMÔMETRO CLÍNICO, AJUSTE DIGITAL, USO AXILAR E ORAL INDIVIDUAL"],
+    ["BR0358268", "TESTE DE GRAVIDEZ"],
+    ["BR0339565U0140", "TIRA REAGENTE PARA MEDIR GLICEMIA CAPILAR (FITA HGT)"],
+    ["BR0305667", "TORNEIRA, PLÁSTICO, 3 VIAS (TORNERINHS 3 VIAS)"],
+    ["BR0332930", "TOUCA, DESCARTÁVEL, TAMANHO ÚNICO C/ ELÁSTICO"],
+    ["BR0355786-1", "ACETILCISTEÍNA 40 MG/ML XAROPE 120"],
+    ["BR0439908", "AGULHA INSULINA- FALTA"],
+    ["BR0350542", "CANETA APLICADORA DE INSULINA, COM SELEÇÃO DE DOSE, REUTILIZÁVEL"]
+  ];
+  // ##################################################################
+  // ##########         FIM DOS DADOS PRÉ-CARREGADOS       ############
+  // ##################################################################
 
-  document.getElementById('inputExcel').addEventListener('change', function(e) {
-    var file = e.target.files[0];
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var data = new Uint8Array(e.target.result);
-      var workbook = XLSX.read(data, { type: 'array' });
-      var sheetName = workbook.SheetNames[0];
-      var worksheet = workbook.Sheets[sheetName];
-      rowData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-    };
-    reader.readAsArrayBuffer(file);
+
+  // --- ELEMENTOS DO DOM ---
+  const searchInput = document.getElementById('searchInput');
+  const searchButton = document.getElementById('searchButton');
+  const excelTableDiv = document.getElementById('excelTable');
+  const statusMessage = document.getElementById('statusMessage');
+  
+  // Variável para armazenar as linhas da tabela
+  let tableRows = [];
+
+  // --- INICIALIZAÇÃO DA PÁGINA ---
+  document.addEventListener('DOMContentLoaded', () => {
+    renderTable(preloadedData);
+    filterTable(''); // Inicia para popular a mensagem de status inicial
   });
 
-  document.getElementById('searchButton').addEventListener('click', function() {
-    var searchText = document.getElementById('searchInput').value.trim().toUpperCase();
-    filterRows(searchText);
-  });
+  // --- EVENT LISTENERS ---
+  searchInput.addEventListener('input', () => filterTable(searchInput.value));
+  searchButton.addEventListener('click', () => filterTable(searchInput.value));
 
-  document.getElementById('searchInput').addEventListener('input', function() {
-    var searchText = this.value.trim().toUpperCase();
-    filterRows(searchText);
-  });
+  // --- FUNÇÕES ---
 
-  function filterRows(searchText) {
-    var filteredRows = rowData.filter(function(row) {
-      return row.some(function(cell) {
-        return cell.toString().toUpperCase().includes(searchText);
+  /**
+   * Renderiza a tabela HTML a partir dos dados fornecidos.
+   */
+  function renderTable(data) {
+    if (!data || data.length < 2) { // Precisa de cabeçalho + pelo menos 1 linha
+      excelTableDiv.innerHTML = '';
+      tableRows = [];
+      return;
+    }
+
+    let html = '<table class="table">';
+    
+    // Cabeçalho
+    const header = data[0];
+    html += '<thead><tr>';
+    header.forEach(cell => {
+      html += `<th>${cell}</th>`;
+    });
+    html += '</tr></thead>';
+
+    // Corpo da Tabela
+    html += '<tbody>';
+    const rows = data.slice(1);
+    rows.forEach(row => {
+      html += '<tr>';
+      row.forEach(cell => {
+        html += `<td>${cell}</td>`;
       });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+
+    excelTableDiv.innerHTML = html;
+    
+    // Armazena as linhas (TRs) para a busca otimizada
+    tableRows = Array.from(excelTableDiv.querySelectorAll('tbody tr'));
+  }
+
+  /**
+   * Filtra as linhas da tabela com base no texto de busca.
+   */
+  function filterTable(searchText) {
+    const searchTerm = searchText.trim().toUpperCase();
+    let visibleRows = 0;
+
+    if (tableRows.length === 0) return;
+
+    tableRows.forEach(row => {
+      const isVisible = row.textContent.toUpperCase().includes(searchTerm);
+      row.style.display = isVisible ? '' : 'none';
+      if (isVisible) {
+        visibleRows++;
+      }
     });
 
-    var htmlTable = '<table class="table"><thead><tr>';
-    rowData[0].forEach(function(cell) {
-      htmlTable += '<th>' + cell + '</th>';
-    });
-    htmlTable += '</tr></thead><tbody>';
-    filteredRows.forEach(function(row) {
-      htmlTable += '<tr>';
-      row.forEach(function(cell) {
-        htmlTable += '<td>' + cell + '</td>';
-      });
-      htmlTable += '</tr>';
-    });
-    htmlTable += '</tbody></table>';
-    document.getElementById('excelTable').innerHTML = htmlTable;
+    // Atualiza a mensagem de status
+    if (searchTerm && visibleRows === 0) {
+      statusMessage.textContent = 'Nenhum resultado encontrado para sua busca.';
+    } else if (searchTerm) {
+      statusMessage.textContent = `${visibleRows} resultado(s) encontrado(s).`;
+    } else {
+      statusMessage.textContent = `Lista Padrão: ${tableRows.length} itens disponíveis para consulta.`;
+    }
   }
 </script>
 
