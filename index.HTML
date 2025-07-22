@@ -36,8 +36,8 @@
       font-size: 14px;
     }
 
-    /* --- ÁREA DE BUSCA E INPUTS --- */
-    .search-container { margin-top: 30px; margin-bottom: 30px; }
+    /* --- ÁREA DE BUSCA E CONTROLES --- */
+    .search-container { margin-top: 30px; margin-bottom: 20px; }
     .form-control {
       border-radius: 12px;
       height: 56px;
@@ -56,14 +56,21 @@
       border-color: #386bf7;
       box-shadow: 0 0 0 0.2rem rgba(56, 107, 247, 0.25);
     }
-
-    /* --- FEEDBACK PARA O USUÁRIO --- */
+    .table-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
     #statusMessage {
-      min-height: 24px;
-      margin-top: 20px;
-      text-align: center;
       font-style: italic;
       color: #ccc;
+      margin: 0;
+    }
+    #printButton {
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
     /* --- BOTÃO ANIMADO --- */
@@ -155,6 +162,72 @@
       white-space: nowrap;
       border: 0;
     }
+    
+    .print-header {
+      display: none; /* Escondido por padrão na tela */
+    }
+
+    /* --- ESTILOS DE IMPRESSÃO --- */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-family: Arial, sans-serif;
+      }
+      
+      .version, .header, .search-container, .table-controls, .footer {
+        display: none !important;
+      }
+      
+      main, .container {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .print-header {
+        display: block; /* Visível apenas na impressão */
+        text-align: center;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 15px;
+      }
+      .print-header img {
+        max-width: 180px;
+        margin-bottom: 10px;
+      }
+      .print-header h2 {
+          font-size: 1.4rem;
+          color: #000;
+          margin: 0;
+      }
+
+      #excelTable {
+        background-color: transparent;
+        border-radius: 0;
+        overflow: visible;
+      }
+      #excelTable table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 10pt; /* Tamanho de fonte menor para caber mais itens */
+      }
+      #excelTable table thead th {
+        background-color: #E0E0E0 !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      #excelTable table th, #excelTable table td {
+        border: 1px solid #999;
+        padding: 6px;
+        color: #000 !important;
+      }
+      #excelTable table tbody tr:nth-child(even),
+      #excelTable table tbody tr:nth-child(odd) {
+        background-color: #fff !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -183,8 +256,22 @@
       </div>
     </div>
     
-    <div id="statusMessage"></div>
+    <div class="table-controls">
+      <div id="statusMessage"></div>
+      <button id="printButton" class="btn btn-info">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer-fill" viewBox="0 0 16 16">
+          <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
+          <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+        </svg>
+        Imprimir Lista
+      </button>
+    </div>
     
+    <div class="print-header">
+      <img src="https://www.natal.rn.gov.br/sme/matriculaonline/img/logo_natal_ws.png" alt="Logomarca da Prefeitura de Natal">
+      <h2>FARMÁCIA UBS SATÉLITE - Lista de Produtos</h2>
+    </div>
+
     <div id="excelTable" class="table-responsive"></div>
 
   </main>
@@ -497,7 +584,7 @@
     ["BR0362329", "SERINGA HIPODÉRMICA DESCARTÁVEL 0,5 ML"],
     ["BR0357861", "SERINGA HIPODÉRMICA DESCARTÁVEL 1ML"],
     ["BR0291012", "SERINGA 3 ML POLIPROPILENO + AGULHA 25 MM X 7 MM LUER SLIP (BICO)"],
-    ["BR0279406", "SERINGA HIPODÉRMICA DESCARTÁvel 3 ML LUER LOOK (ROSCA)"],
+    ["BR0279406", "SERINGA HIPODÉRMICA DESCARTÁVEL 3 ML LUER LOOK (ROSCA)"],
     ["BR0292118", "SERINGA 5 ML POLIPROPILENO+ AGULHA 25 X 7 LUER SLIP (BICO)"],
     ["BR0428920", "SERINGA HIPODÉRMICA DESCARTÁVEL 5 ML LUER LOOK (ROSCA)"],
     ["BR0298557", "SERINGA HIPODÉRMICA DESCARTÁVEL 10ML LUER SLIP (BICO)"],
@@ -570,65 +657,50 @@
   // --- ELEMENTOS DO DOM ---
   const searchInput = document.getElementById('searchInput');
   const searchButton = document.getElementById('searchButton');
+  const printButton = document.getElementById('printButton');
   const excelTableDiv = document.getElementById('excelTable');
   const statusMessage = document.getElementById('statusMessage');
   
-  // Variável para armazenar as linhas da tabela
   let tableRows = [];
 
-  // --- INICIALIZAÇÃO DA PÁGINA ---
+  // --- INICIALIZAÇÃO ---
   document.addEventListener('DOMContentLoaded', () => {
     renderTable(preloadedData);
-    filterTable(''); // Inicia para popular a mensagem de status inicial
+    filterTable('');
   });
 
   // --- EVENT LISTENERS ---
   searchInput.addEventListener('input', () => filterTable(searchInput.value));
   searchButton.addEventListener('click', () => filterTable(searchInput.value));
+  printButton.addEventListener('click', () => window.print());
 
   // --- FUNÇÕES ---
-
-  /**
-   * Renderiza a tabela HTML a partir dos dados fornecidos.
-   */
   function renderTable(data) {
-    if (!data || data.length < 2) { // Precisa de cabeçalho + pelo menos 1 linha
+    if (!data || data.length < 2) {
       excelTableDiv.innerHTML = '';
       tableRows = [];
       return;
     }
 
     let html = '<table class="table">';
-    
-    // Cabeçalho
     const header = data[0];
     html += '<thead><tr>';
-    header.forEach(cell => {
-      html += `<th>${cell}</th>`;
-    });
+    header.forEach(cell => html += `<th>${cell}</th>`);
     html += '</tr></thead>';
 
-    // Corpo da Tabela
     html += '<tbody>';
     const rows = data.slice(1);
     rows.forEach(row => {
       html += '<tr>';
-      row.forEach(cell => {
-        html += `<td>${cell}</td>`;
-      });
+      row.forEach(cell => html += `<td>${cell}</td>`);
       html += '</tr>';
     });
     html += '</tbody></table>';
 
     excelTableDiv.innerHTML = html;
-    
-    // Armazena as linhas (TRs) para a busca otimizada
     tableRows = Array.from(excelTableDiv.querySelectorAll('tbody tr'));
   }
 
-  /**
-   * Filtra as linhas da tabela com base no texto de busca.
-   */
   function filterTable(searchText) {
     const searchTerm = searchText.trim().toUpperCase();
     let visibleRows = 0;
@@ -638,18 +710,15 @@
     tableRows.forEach(row => {
       const isVisible = row.textContent.toUpperCase().includes(searchTerm);
       row.style.display = isVisible ? '' : 'none';
-      if (isVisible) {
-        visibleRows++;
-      }
+      if (isVisible) visibleRows++;
     });
 
-    // Atualiza a mensagem de status
     if (searchTerm && visibleRows === 0) {
-      statusMessage.textContent = 'Nenhum resultado encontrado para sua busca.';
+      statusMessage.textContent = 'Nenhum resultado encontrado.';
     } else if (searchTerm) {
       statusMessage.textContent = `${visibleRows} resultado(s) encontrado(s).`;
     } else {
-      statusMessage.textContent = `Lista Padrão: ${tableRows.length} itens disponíveis para consulta.`;
+      statusMessage.textContent = `${tableRows.length} itens disponíveis para consulta.`;
     }
   }
 </script>
