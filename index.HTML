@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FARMÁCIA UBS SATÉLITE | Consulta</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     /* --- GERAL --- */
     body {
@@ -46,9 +47,9 @@
       color: #ffffff;
       font-size: 16px;
       border: 1px solid #444;
-      display: flex;
-      align-items: center;
+      /* Propriedades display: flex e align-items: center removidas para otimização em inputs */
     }
+
     .form-control::placeholder { color: #aaa; }
     .form-control:focus {
       background-color: #2c2c2c;
@@ -130,7 +131,10 @@
         transform: scale(1.1);
     }
     #printButton:hover p {
-        transform: none; /* Remove a animação de texto do botão buscar */
+        /* Correção para garantir que o texto do botão Imprimir não desapareça ao ser copiada
+           a regra de hover do botão buscar */
+        transform: none; 
+        opacity: 1; /* Garantir que o texto esteja visível */
     }
 
     /* --- TABELA --- */
@@ -276,7 +280,7 @@
 
 <script>
   // ##################################################################
-  // ##########           DADOS PRÉ-CARREGADOS             ############
+  // ##########            DADOS PRÉ-CARREGADOS              ############
   // ##################################################################
   const preloadedData = [
     ["CÓDIGO", "PRODUTO"],
@@ -286,7 +290,7 @@
     ["BR0271689-1", "ACIDO ASCÓRBICO 200 MG/ML SOLUÇÃO ORAL 20 ML"],
     ["BR0271691", "VITAMINA C- ÁCIDO ASCÓRBICO 500 MG COMPRIMIDO"],
     ["BR0267503U0042", "ACIDO FÓLICO 5 MG COMPRIMIDO ELENCO ESTADUAL"],
-    ["BR0278489U0097", "ÁCIDO FÓLICO 0,2 MG/ML SOLUÇÃO ORAL 30 ML"]
+    ["BR0278489U0097", "ÁCIDO FÓLICO 0,2 MG/ML SOLUÇÃO ORAL 30 ML"], 
     ["BR0276839U0063", "AGUA DESTILADA SOLUÇÃO INJETÁVEL 10 ML ELENCO ESTADUAL"],
     ["BR0411827", "AGULHA PARA CANETAS DE INSULINA"],
     ["BR0267507U0063", "ALBENDAZOL 40 MG/ML SUSPENSÃO ORAL 10 ML"],
@@ -412,7 +416,7 @@
     ["BR0267728U0042", "NIFEDIPINO 10 MG COMPRIMIDO"],
     ["BR0267730", "NIFEDIPINO 10 MG COMPRIMIDO DE LIBERAÇÃO PROLONGADA"],
     ["BR0267729", "NIFEDIPINO 20 MG COMPRIMIDO ELENCO ESTADUAL"],
-    ["BR0266788-2", "NISTATINA 25.000 UI/G CREME VAGINAL 60 G"]
+    ["BR0266788-2", "NISTATINA 25.000 UI/G CREME VAGINAL 60 G"], 
     ["BR0273710", "NIMESULIDA 100 MG COMPRIMIDO"],
     ["BR0270846U0005", "NORETISTERONA, ENANTATO DE + ESTRADIOL, VALERATO DE 50 + 5 MG/ML SOLUÇÃO INJETÁVEL 1 ML"],
     ["BR0267733U0042", "NORETISTERONA 0,35 MG COMPRIMIDO"],
@@ -446,7 +450,9 @@
     ["BR0412965", "SIMETICONA 75 MG/ML SOLUÇÃO ORAL 15 ML"],
     ["BR0412965-1", "SIMETICONA 75 MG/ML SUSPENSÃO ORAL 10 ML"],
     ["BR0267747U0042", "SINVASTATINA 20 MG COMPRIMIDO"],
-    ["BR0267745U0042", "SINVASTATINA 40 MG COMPRIMIDOBR0272089U0023SULFADIAZINA DE PRATA 1% CREME 30 G"],
+    // CORRIGIDO: A linha abaixo foi separada e formatada corretamente.
+    ["BR0267745U0042", "SINVASTATINA 40 MG COMPRIMIDO"], 
+    ["BR0272089U0023", "SULFADIAZINA DE PRATA 1% CREME 30 G"],
     ["BR0272089U0029", "SULFADIAZINA DE PRATA 1% CREME 50 G"],
     ["BR0267765U0042", "SULFADIAZINA 500 MG COMPRIMIDO"],
     ["BR0308882U0042", "SULFAMETOXAZOL + TRIMETOPRIMA 400 + 80 MG COMPRIMIDO ELENCO ESTADUAL"],
@@ -454,7 +460,7 @@
     ["BR0292344U0042", "SULFATO FERROSO (40MG DE FERRO ELEMENTAR) COMPRIMIDO ELENCO ESTADUAL"],
     ["BR0271581", "TOBRAMICINA 0,3 % SOLUÇÃO OFTÁLMICA 5 ML"],
     ["BR0437109", "VITAMINAS DO COMPLEXO B (B1,B2,B3,B5,B6) COMPRIMIDO"],
-    ["BR0368499-2", "VITAMINAS DO COMPLEXO B (B1,B2,B3,B5,B6) SOLUÇÃO ORAL 30ML"]
+    ["BR0368499-2", "VITAMINAS DO COMPLEXO B (B1,B2,B3,B5,B6) SOLUÇÃO ORAL 30ML"],
     ["BR0348807", "ABAIXADOR DE LÍNGUA, MADEIRA"],
     ["BR0397502", "AGULHA HIPODÉRMICA, DESCARTÁVEL 25 X 0,8"],
     ["BR0397494", "AGULHA HIPODÉRMICA, DESCARTÁVEL 40 X 1,2"],
@@ -547,8 +553,8 @@
     ["BR0313379", "MÁSCARA N95, CLASSE PFF-2"],
     ["BR0341923", "MÁSCARA CIRÚRGICA, NÃO TECIDO 3 CAMADAS DESCARTÁVEL"],
     ["BR0389556", "MONITOR P/ MEDIR GLICEMIA CAPILAR (GLICOSÍMETRO)"],
-    ["BR0244064", "ÓCULOS DE PROTEÇÃO FACIAL"],
-    ["BR0244064", "PAPEL GRAU CIRÚRGICO"],
+    ["BR0244064_A", "ÓCULOS DE PROTEÇÃO FACIAL"], // CORRIGIDO: Alterado ID duplicado (era BR0244064)
+    ["BR0244064_B", "PAPEL GRAU CIRÚRGICO"], // CORRIGIDO: Alterado ID duplicado (era BR0244064)
     ["BR0438072", "PAPEL GRAU CIRÚRGICO CERCA DE 50 CM, 100 M"],
     ["BR0274398", "PAPEL GRAU CIRÚRGICO, 15 CM, 100 M"],
     ["BR0274395", "PAPEL GRAU CIRÚRGICO 45 CM, 100M"],
@@ -587,7 +593,7 @@
     ["BR0279410", "SERINGA HIPODÉRMICA DESCARTÁVEL 20 ML LUER LOOK ROSCA)"],
     ["BR0275896", "SISTEMA DE ASPIRAÇÃO ENDOTRAQUEAL FECHADO Nº12"],
     ["BR0454397", "SISTEMA DE ASPIRAÇÃO ENDOTRAQUEAL FECHADO Nº14"],
-    ["BR0435901", "SONDA TRATO DIGESTIVO, NASOENTERAL, POLIURETANO, Nº 10"],
+    ["BR0435901_A", "SONDA TRATO DIGESTIVO, NASOENTERAL, POLIURETANO, Nº 10"], // CORRIGIDO: Alterado ID duplicado (era BR0435901)
     ["BR0435902", "SONDA TRATO DIGESTIVO, NASOENTERAL, POLIURETANO, Nº 12"],
     ["BR0357170", "SONDA FOLEY MATERIL LATÉX Nº 10 2 VIAS"],
     ["BR0277016", "SONDA FOLEY MATERIL LATÉX Nº 12 2 VIAS"],
@@ -602,7 +608,7 @@
     ["BR0277026", "SONDA FOLEY MATERIAL LATÉX N°22 3 VIAS"],
     ["BR0274622", "SONDA NASOGÁSTRICA CURTA N° 06"],
     ["BR0276140", "SONDA NASOGÁSTRICA CURTA N° 08"],
-    ["BR0435901", "SONDA NASOGÁSTRICA CURTA N° 10"],
+    ["BR0435901_B", "SONDA NASOGÁSTRICA CURTA N° 10"], // CORRIGIDO: Alterado ID duplicado (era BR0435901)
     ["BR0279738", "SONDA NASOGÁSTRICA CRUTA N° 12"],
     ["BR0274630", "SONDA NASOGASTRICA CURTA N° 14"],
     ["BR0270551", "SONDA NASOGASTRICA CURTAA Nº 16"],
@@ -645,7 +651,7 @@
     ["BR0350542", "CANETA APLICADORA DE INSULINA, COM SELEÇÃO DE DOSE, REUTILIZÁVEL"]
   ];
   // ##################################################################
-  // ##########         FIM DOS DADOS PRÉ-CARREGADOS       ############
+  // ##########        FIM DOS DADOS PRÉ-CARREGADOS          ############
   // ##################################################################
 
 
