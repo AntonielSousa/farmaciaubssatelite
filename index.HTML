@@ -237,7 +237,7 @@
     <p>Imprimir</p>
 </button>
 
-<div class="version">Atualizado em 14/10/2026</div>
+<div class="version">Atualizado em 20/05/2026</div>
 
 <div class="container mt-4">
   <header class="header text-center">
@@ -248,7 +248,7 @@
   <main>
     <div class="search-container">
       <div class="input-group">
-        <input type="text" id="searchInput" class="form-control" placeholder="Busque por código BR, medicamento ou material...">
+        <input type="text" id="searchInput" class="form-control" placeholder="Busque por código CATMAT, medicamento ou material...">
         <div class="input-group-append">
           <button class="botaoAnimado botao-buscar" type="button" id="searchButton">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff">
@@ -264,7 +264,7 @@
     
     <div class="print-header">
       <img src="https://www.natal.rn.gov.br/sme/matriculaonline/img/logo_natal_ws.png" alt="Logomarca da Prefeitura de Natal">
-      <h2>FARMÁCIA UBS SATÉLITE</h2>
+      <h2>FARMÁCIA UBS SATÉLITE - Lista de Medicamentos e Materiais</h2>
     </div>
 
     <div id="excelTable" class="table-responsive"></div>
@@ -2460,7 +2460,6 @@
     for (const {item} of found) {
       const tr = document.createElement('tr');
       tr.innerHTML = `<td>${escapeHTML(item.code)}</td><td>${escapeHTML(item.name)}</td>`;
-      tr.querySelector('td').title = 'Clique para copiar o código CATMAT';
       tr.querySelector('td').style.cursor = 'copy';
       tr.querySelector('td').addEventListener('click', async () => {
         try {
